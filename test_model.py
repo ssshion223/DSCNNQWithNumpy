@@ -14,13 +14,20 @@ output_details = interpreter.get_output_details()
 tensor_details = interpreter.get_tensor_details()
 interpreter.set_tensor(input_details[0]['index'], input)
 interpreter.invoke()
-# output_data = interpreter.get_tensor(output_details[0]['index'])
-# print(output_data)
-details = interpreter.get_tensor_details()
 
-for t in details:
-    print(t["name"])
-    print("scale:", t["quantization"][0])
-    print("zero_point:", t["quantization"][1])
-    print("dtype:", t["dtype"])
-    print()
+for t in tensor_details:
+    print("=" * 50)
+    print("name:", t['name'])
+    print("index:", t['index'])
+    print("dtype:", t['dtype'])
+
+    qp = t.get('quantization_parameters', None)
+    if qp:
+        print("scales:", qp['scales'])
+        print("zero_points:", qp['zero_points'])
+        print("quant_dim:", qp['quantized_dimension'])
+print(interpreter.get_tensor(output_details[0]['index']))
+# for d in tensor_details:
+#     print(d['index'], d['name'], d['shape'])
+# output = interpreter.get_tensor(4)
+# print(output)
